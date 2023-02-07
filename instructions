@@ -1,0 +1,528 @@
+when creating server first
+
+1) close terminal => then open it again => write npm init -y
+
+2) !!!ONLY THEN !!! 
+
+create server.js file and in there (console.log('blabla')) => write node server, if everything correct will run 'blabla' in terminal
+
+3) To set up front and server in ES6 => go to package.json (server not client) write after main => "type": "module",
+
+4) setup express server => stop server and type "npm install nodemon --save-dev"
+ then in package.json (server) we can delete "test": "echo \"Error: no test specified\" && exit 1
+
+ and setup "scripts":{ such as "start" :"nodemon server"
+
+ from now on we can write npm start in terminal
+
+
+ then "npm install express"
+
+
+5) From there we can enter server.js and type the following
+
+import express from 'express'
+const app = express ()
+
+
+const port = process.env.PORT || 5000
+
+app.listen(port, () => {
+	console.log(`Server is listening on port ${port}...`)
+})
+
+stop server and spin it again
+
+
+6) add dummy route such as 
+
+app.get('/', (req, res) => {
+	res.send('Welcome')
+})	
+
+
+
+7) setup of Middleware used in the project NotFound and Error
+
+
+
+a) create folder middleware b) create e.g not-found.js file with a function
+
+c) in server.js above app.get... import the middleware 
+
+d) add app.use(notFoundMiddleware)  after app.get and before app.listen
+
+
+
+8) errorHandlerMiddleware goes right after notFoundMiddleware such as app.use(errorHanlderMiddleware)
+
+
+
+9) before connecting to DB is important to create .env file
+  where in order to access those env variable we need to
+  "npm install dotenv"
+
+  following steps consisting in importing .env package in server.js
+
+  such as "import dotenv from 'dotenv' "
+  		   dotenv.config()
+
+  then create .env files where we pass different values to .env variables
+
+  it is also important to create gitignore file where we type in it
+  	/node_modules
+  	.env
+
+  	
+
+  10) create DB in mongo => login, once logged 
+
+  A)choose database access
+   => password => fill fields under password Authentification => 
+   select under Built-in Role "Read and write to any database" => 
+   Add User (green button at the bottom)
+
+   if you already have user you can skip database access and go 
+   
+  B) to network access, then Edit => we could add current ip address but we will leave as it is and press confirm (green button)
+
+  actually steps A and B could be skipped
+
+  so go to Database and choose connect => connect your application =>
+  => 4.1 or later => copy 
+
+  "mongodb+srv://<username>:<password>@node-express-project.7oghwph.mongodb.net/?retryWrites=true&w=majority" => close and navigate to text editor
+
+  create "db" folder and file "connect.js")
+
+  then in env. create variable such as for instance MONGO_URL = "mongodb+..."
+
+  11) npm install mongoose and import mongoose in connect.js
+
+  there write down
+
+  const connectDB = (url) => {
+  	return mongoose(url).connect()
+  }
+
+  export default connectDB
+
+  go to server.js, import connectDB 
+
+  then write at the bottom
+
+  	const start = async () => {
+
+		try{
+
+		await connectDB(process.env.MONGO_URL)
+		app.listen(port, () => {
+			console.log(`Server is listening on port ${port}...`)
+		})
+
+	} catch (error) {
+		console.log(error)
+	}
+
+}
+
+start()
+
+
+
+where we moved 
+	
+	app.listen(port, () => {
+			console.log(`Server is listening on port ${port}...`)
+	})
+
+inside the try and catch block
+
+
+12) Now that DB is connected we can start working on controllers
+
+	set folders controllers and routes
+	
+	From there, we can start create  dummy controllers for instance
+	in authController.js
+
+	and then go to folder routes and create for instance authRoutes.js
+
+	in authRoutes we are going to define the routes and the method associated
+
+	e.g router.route('/register').post(register) 
+
+	
+	Then go to server and  import for instance authRouter from /routes/authRoute 
+
+	=> after the dummy route "app.get..", we should make us of "app.use()"" such as for instance app.use('/api/v1/auth', authRouter)
+
+	in order to also access the json data that will be posted in post method we need 
+	to import in server the following method :
+
+	"app.use(express.json()), right before "app.get..".
+
+	That way, we are making the json data in the controllers available to us
+
+	!!!!!!!!!!!!!!!!!! ONLY WHEN 14) is completed you will see something in MONGO DB !!!!!!!!!!!!!!!!!
+
+
+13) assume you want starting testing those dummy route => go to postman
+
+	How to test them in Postman ????
+	
+	step 1 create collection and give it a name
+	
+	step 2 set up the folder, the numbers of folder depends on the numbers of type of controllers
+	
+	step 3 add request, meaning for each associated route/method create the request 
+			 for instance Post Register User
+	
+	step 4 then it's about defining the route, since there is the likelyhood that the first 
+				 part of the route will repeat itself we can set up a global variable by first clicking
+				 on the eyes => where it is written globals => click edit and => define the name of the 
+				 global variable in variable e.g URL => then in initial value write http://localhost:5000 and add /api/v1/auth from number 12) such as  
+
+				 http://localhost:5000/api/v1
+
+				 you can then save. 
+
+		step 5 back in Register User you can write {{URL}} and add for instance auth/register such {{URL}}/auth/register as we defined router.route('/register').post(register) in authRoutes.js
+
+		step 6 you can now send and test
+
+
+
+
+14) HOW TO SETUP our First Schema in Mongo DB after connecting it to our server
+
+ step 1 create model folder and a file representing a schema for instance user (User.js)
+ step 2 "import mongoose from 'mongoose" in it. 
+ step 3 then it's about create the structure such as for instance
+
+ 				const UserSchema = new mongoose.Schema({ })
+
+ 				inside we define the properties such for instance 
+
+ 				const UserSchema = new mongoose.Schema({ 
+
+ 					name:{
+ 						type: String, 
+ 						required: [true, 'Provide name'],
+ 						minLength: 3,
+ 						maxLength:20,
+ 						trim: true,
+ 					},
+ 					and so on...
+ 				})
+
+ 				in order to setup the model, type at the bottom:
+
+ 				export default mongoose.model('User', UserSchema) => will create User collection in mongoDB
+
+ !!!!!!!!!! ONLY when this step is completed, we will see the Schema and DB in Mongoose it should appear in our Mongoose
+
+ !!!!!! To see collection with properties we need for instance to go in authControllers and develpp the code and then test it in POSTMAN.
+
+
+
+
+15) When creating property email in our schema, we can validate it by installing
+		
+		npm install validator
+
+
+16) In our controllers, we use next to pass the error middleware in the 
+   try and catch block in asyncronous manner, for instance 
+
+   const register = async (req,res, next) => {
+			try {
+				const user = await User.create(req.body)
+				res.status(201).json({ user })
+
+			} catch (error) {
+				next(error)
+			}
+	}
+
+	in order to remove the try and catch block we can install the following
+	package "npm install express-async-errors"
+
+	it's important to import 'express-async-errors' in server.js at the top
+
+	that way we do not need to set up try and catch block in controller  such as 
+
+	 const register = async (req,res, next) => {
+			
+				const user = await User.create(req.body)
+				res.status(201).json({ user })
+		}
+
+	16) Very useful library for status is http-status-codes 
+
+	=> "npm install http-status-codes"
+
+	=> import/setup in authController and error-handler 
+
+
+	17) How to Setup proper error handler
+
+
+	create errors folder with bad-request,custom-api,not-found and unauthenticated files
+
+	in custom-api create class, in-bad request import custom-api and http-status-codes
+	as well in not-found
+
+	when created the bad-request, not-found, import the fonction in authController
+
+	Error handling does not require to import any npm package, so you can copy
+	past without any problem from past projects
+
+
+18) How to hash password
+
+
+	first npm install bcryptjs => then go to your model user in User.js =>
+	import bycript.js =>  it is important
+	to setup the middleware such as 
+
+	UserSchema.pre('save', async function () {
+		const salt = await bcrypt.genSalt(10);
+		this.password = await bcrypt.hash(this.password, salt)
+})
+
+keep in mind that at this point the password is send back in our response
+that will be later removed
+
+
+19) HOW TO SET UP JSONWEBTOKEN ?
+
+
+
+a) npm install jsonwebtoken => import jwt from 'jsonwebtoken' in User.js
+
+b) 
+
+UserSchema.methods.createJWT = function() {
+	return jwt.sign({ userId : this._id }, 'jwtSecret', { expiresIn: '1d'})
+}
+
+based on that we can add in authController, in register function after const user = await User.create..
+
+the following "const token = user.createJWT()"
+
+and it is there that we add to our response "res.status(StatusCodes.CREATED).json({ user })""
+
+constant token  such as
+
+"res.status(StatusCodes.CREATED).json({ user, token }) "
+
+
+
+As side note const token = user.createJWT() is also applied when loggin in 24)
+
+
+
+20) We can also add to .env variable such JWT_SECRET and JWT_LIFETIME
+
+=> create those variable in .env and assign a value
+
+=> for assign a value to JWT_SECRET navigate to https://www.allkeysgenerator.com/
+
+=> then select 256 bit and encription key => copy the string generated and 
+assign it to JWT_SECRET
+
+
+from there we can replace in 
+
+UserSchema.methods.createJWT = function() {
+	return jwt.sign({ userId : this._id }, 'jwtSecret', { expiresIn: '1d'})
+}
+
+'jtwSecret' and '1d' with .env variable such as 
+
+	return jwt.sign({ userId : this._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_LIFE })
+
+can then restart server. 
+
+
+
+21) HOW TO REMOVE PASSWORD FROM RESPONSE
+
+add in User.js to property password => select: false
+
+but that's not enough therfore in register function, we modifiy the following response 
+
+res.status(StatusCodes.CREATED).json({ user, token }) such as 
+
+res.status(StatusCodes.CREATED).json({ user: {email: user: email, firstName: user.firstName,
+ lastName: user.lastName, city: user.city, adress: user.adress,}, token })
+
+
+22) HOW TO CONNECT FRONT-END WITH BACKEND ? 
+
+npm install concurrently --save-dev
+
+We want our start command to spin both the front and the back =>
+first go to package.json (not the one in the client) 
+
+where you have 
+
+"scripts": {
+    "start": "nodemon server"
+  },
+
+replace it with "scripts": {
+    "server": "nodemon server --ignore client",
+    "client": "npm start --prefix client",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \" npm run client\""
+  },
+
+
+ Front and back are on separate server , they are not yet able to communicate therefore
+
+ a solution is cors package npm install cors
+
+ import cors from 'cors' in server.js =>  right before app.use(express.json())
+ write "app.use(cors())"
+
+
+ or proxy => go to client folder => package.json =>
+
+ bottom add    "proxy": "http://localhost:5000" such as 
+
+ },
+  "proxy": "http://localhost:5000"
+}
+
+
+
+23) HOW TO CONNECT FRONT REGISTER WITH BACK REGISTER AND CREATE THEN THE USER 
+
+
+
+1) you can first  Fetch data from server using axios
+
+	go to client folder in terminal and run npm install axios
+
+	in our project is about 
+
+	a) setting registerUser in appContext, (import axios in appContext.js)
+	b) import the action in appContext and reducers,
+	c) change the state based on the type of action
+
+
+
+24) LOGIN FUNCTIONNALITY IN BACK END
+
+
+
+ a) npm install morgan => import morgan from 'morgan' in server.js
+
+ b) above app.use(express.json()) add 
+
+ 		if(process.env.NODE_ENV !== 'production') {
+		app.use(morgan('dev'))
+	}
+
+	morgan is installed to keep track of the routes and the method associated to it in the terminal
+	to use when having multiple methods/routes
+
+	We can start working on the login when functionnality by setting up unauthenticated error handler
+
+	by creating unauthenticated.js file in errors folder
+
+
+	In login it's important to compare password for that, an instance in model user is going to be 
+	created such as
+
+
+	UserSchema.methods.comparePassword = async function(canditatePassword) {
+		const isMatch = await bcrypt.compare(canditatePassword, this.password)
+		return isMatch
+	}
+
+	Once the error handler and the instance method in place we can set up the loggin functionality
+	in the controller.
+
+	When setting up the login in the controller as follows 
+
+
+	const login = async (req,res) => {
+		const { email, password } = req.body
+		if(!email || !password) {
+			throw new BadRequestError('Please provide all values')
+		}	
+
+		const user = await User.findOne({ email })
+	
+		if(!user) {
+			throw new UnAuthenticatedError('Invalid credentials')
+		}
+
+		const isPasswordCorrect = await user.comparePassword(password)
+			if(!isPasswordCorrect) {
+			throw new UnAuthenticatedError('Invalid Credentials')
+		}
+	}
+
+
+
+	there is a big gotcha due to the following operation
+
+	in number 21) in User.js it was added to property password => select: false
+
+	that ensures that in our controller we did not get the password when doing 
+
+	const user = await User.findOne({ email })
+
+	therefore to fix this issue in order to compare the passwords
+	passt in the post method and the password in DB already existing
+
+	 we add ".select('+password')"such as
+
+	const user = await User.findOne({ email }).select('+password')
+
+	In register 19)  we created a json web token, we do the same as when loggin =>
+
+	"const token = user.createJWT()""
+
+	
+	There is as well another gotcha,  now that we added .select('+password'), we 
+	get once again the password in our response such as in 21)
+
+	but this time instead of "hardcodig" such as we did in 21) => 
+
+	res.status(StatusCodes.CREATED).json({ user: {email: user: email, firstName: user.firstName,
+ 		lastName: user.lastName, city: user.city, adress: user.adress,}, token })
+
+ 	
+ 	we simply add after "const token = user.createJWT()"
+
+ 	user.password = undefined and there is no password in our response. 
+
+
+	
+	25) HOW TO CONNECT FRONT LOGIN WITH BACK LOGIN
+
+
+		in our project is about 
+
+	a) setting loginUser in appContext, 
+	b) import the action in appContext and reducers,
+	c) change the state based on the type of action
+
+
+
+
+26) WE CAN ALSO CREATE AN UNIQUE FUNCTION IN APPCONTEXT TAKING INTO LOGINUSER AND REGISTERUSER HOW ?
+
+	in this case add to setupUser fonction currentUser, endpoint and alertText as paramenters
+
+
+
+
+
+
+
+						
