@@ -58,7 +58,6 @@ const Profile = () => {
 	return(
 		<Wrapper>
 			<div className = 'container-personal-infos'>
-				<Avatar />
 
 				<span className ='first-and-last-names'>{user.firstName} {user.lastName}</span>
 				{user.address && user.city && user.zipCode? <span className = 'address-city-zipCode'>{user.address}, {user.zipCode} {user.city }</span> : null}
@@ -115,12 +114,14 @@ const Profile = () => {
 
 		{/*	 <AppointmentsContainer futureAppointments={futureAppointments} /> */}
 		<AppointmentsContainer/> 
+		
+		{isEditProfile ? <EditProfileModal  /> : null}
+			
+
+		<EditButton />
 
 
 
-			<EditButton />
-
-			{isEditProfile ? <EditProfileModal  /> : null}
 		</Wrapper> 
 	)
 }

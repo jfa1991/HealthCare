@@ -56,8 +56,8 @@ const AppointmentsContainer = () => {
 			 		</ul>
 				</div>}
 
-				<button onClick={handleFileChange}>hello</button> 
-				            <input type="file" accept="image/*" onChange={handleFileChange} />
+			{/*	<button onClick={handleFileChange}>hello</button> 
+				            <input type="file" accept="image/*" onChange={handleFileChange} /> */}
 
 		</div>
 
