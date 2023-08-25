@@ -6,7 +6,7 @@ const EditButton = () => {
 	const { user, showEditProfile, isEditProfile  } = useAppContext()
 
 	return(
-		<ButtonEdit>
+		<ButtonEdit isEditProfile={isEditProfile}>
 		
 		<button className ='button-edit' onClick ={showEditProfile}>{!user.address || !user.city || !user.zipCode ? 'Complete Your Personal Informations' : 'Update Personal Informations'}</button>
 		</ButtonEdit>

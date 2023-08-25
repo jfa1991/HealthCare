@@ -1,8 +1,11 @@
 import styled from 'styled-components'
 
 const Wrapper = styled.section`
-
 	
+	
+
+	  position: ${props => (props.isEditProfile ? 'fixed' : 'static')}; /* Change position based on isEditProfile */
+
 
 
 	.container-personal-infos{
@@ -16,7 +19,11 @@ const Wrapper = styled.section`
 		align-items: center;
 		font-weight: bolder;
 		font-size: 1.05rem;
+		opacity: ${props => (props.isEditProfile ? 0 : 1)};
+
 	}
+
+
 
 	.first-and-last-names{
 		font-size: 2rem;
@@ -45,6 +52,8 @@ const Wrapper = styled.section`
 		margin: 1em auto 3em auto;
 		align-items:center;
 		font-weight:bolder;
+		opacity: ${props => (props.isEditProfile ? 0 : 1)};
+
 	//	display:grid;
 	//	justify-content: center;
 	//	border: 1px solid black;
@@ -52,8 +61,6 @@ const Wrapper = styled.section`
 
 
 		
-
-
 
 	}
 
@@ -64,6 +71,8 @@ const Wrapper = styled.section`
 		letter-spacing: var(--letterSpacing);
 		display:block;
 		text-align:center;
+		opacity: ${props => (props.isEditProfile ? 0 : 1)};
+
 
 
 	}
@@ -90,6 +99,7 @@ const Wrapper = styled.section`
 		border-style: dotted;
 		padding: 1em 1em;
 
+
 	}
 
 	.future-appointments, .appointments-history {
@@ -97,6 +107,7 @@ const Wrapper = styled.section`
 		letter-spacing: var(--letterSpacing);
 		font-size: 1.5rem;
 		text-align:center;
+
 
 	}
 

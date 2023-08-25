@@ -56,7 +56,7 @@ const Profile = () => {
 
 
 	return(
-		<Wrapper>
+		<Wrapper isEditProfile={isEditProfile}>
 			<div className = 'container-personal-infos'>
 
 				<span className ='first-and-last-names'>{user.firstName} {user.lastName}</span>

@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 const ButtonEdit = styled.div`
 
+
+
 .button-edit {
 		font-size: 1.15rem;
 		display: flex;
@@ -18,6 +20,10 @@ const ButtonEdit = styled.div`
     	margin: 1em auto 2.5em auto;
     	transition: var(--transition);
     	z-index:1;
+    	opacity: ${props => (props.isEditProfile ? 0 : 1)};
+
+
+
 
 }
 
