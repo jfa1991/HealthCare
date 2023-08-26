@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Navbar, NavbarSmall, ContactFormRow, ContactFormTextArea  } from '../components'
+import { Navbar, NavbarSmall, ContactFormRow, ContactFormTextArea,   } from '../components'
 import { useAppContext } from '../context/appContext'
+
+import emailjs from '@emailjs/browser';
 
 
 import Wrapper from '../assets/wrappers/ContactPage'
@@ -21,17 +23,64 @@ const Contact = () => {
 
 	const { showSmallNavbar  } = useAppContext()
 
-
-
-
-
 	const [valuesContact,setValuesContact] = useState(contactState)
 
 
-	const handleChangeContact = (e) => {
+
+		// Handle imput in form
+
+
+
+	const handleChangeContactLastNameAndFirstNAme = (e) => {
+  		const { name, value } = e.target;
+
+  		// Validate the input using the regular expression
+  		if (/^[\p{L}\s\-'\.\u00C0-\u02AF]*$/u.test(value) || value === "") {
+    		setValuesContact({ ...valuesContact, [name]: value });
+  		}
+	};
+
+
+
+	const handleChangeContactEmailAndMessage = (e) => {
 		setValuesContact({...valuesContact, [e.target.name]: e.target.value })
 
 	}
+
+	const handleChangePhoneContact = (e) => {
+  		const { name, value } = e.target;
+
+  		// Validate the input using the regular expression
+  		if (/^(\+)?[\d\s]*$/.test(value) || value === "") {
+   		 	setValuesContact({ ...valuesContact, [name]: value });
+  		}
+	};
+
+
+
+
+	// Functionnality to Receive Email from client
+
+
+	const form = useRef();
+
+	const sendEmail = (e) => {
+    	e.preventDefault();
+    	emailjs.sendForm(process.env.REACT_APP_YOUR_SERVICE_ID, process.env.REACT_APP_YOUR_TEMPLATE_ID, form.current, process.env.REACT_APP_YOUR_PUBLIC_KEY)
+      		.then((result) => {
+          		console.log(result.text);
+      		}, (error) => {
+          	console.log(error.text);
+      	});
+
+      	setValuesContact(contactState)
+      	
+  	};
+ 
+
+
+  
+	
 
 	return(
 		<Wrapper>
@@ -50,20 +99,22 @@ const Contact = () => {
 					<img src = {contact} alt= 'picture-contact' className= 'img'/>
 				</div>
 
-				<form className = 'form'>
+				<form className = 'form' ref={form} onSubmit ={sendEmail}>
+					
 					<ContactFormRow
 						type ='text'
 						value = {valuesContact.firstName}
 						name = 'firstName'
-						handleChange= {handleChangeContact}
+						handleChange= {handleChangeContactLastNameAndFirstNAme}
 						labelText ='First Name'
+
 					/>
 
 					<ContactFormRow
 						type='text'
 						value = {valuesContact.lastName}
 						name ='lastName'
-						handleChange ={handleChangeContact}
+						handleChange ={handleChangeContactLastNameAndFirstNAme}
 						labelText ='Last Name'
 					/>
 
@@ -71,14 +122,14 @@ const Contact = () => {
 						type ='email'
 						value = {valuesContact.email}
 						name='email'
-						handleChange = {handleChangeContact}
+						handleChange = {handleChangeContactEmailAndMessage}
 					/>
 
 					<ContactFormRow
-						type ='number'
+						type ='text'
 						value = {valuesContact.phone}
 						name ='phone'
-						handleChange = {handleChangeContact}
+						handleChange = {handleChangePhoneContact}
 					/>
 
 
@@ -88,11 +139,11 @@ const Contact = () => {
 						type ='text'
 						value={valuesContact.message}
 						name='message'
-						handleChange={handleChangeContact}
+						handleChange={handleChangeContactEmailAndMessage}
 					/>
 
 
-					<button className = 'btn '>Submit</button>
+					<button type ='submit' className = 'btn '>Submit</button>
 
 
 				</form>
@@ -100,6 +151,9 @@ const Contact = () => {
 				{/*<Link to ='/register' className ='btn btn-book-online'>Book Your Appointment Online</Link> */}
 
 
+
+
+  
 
 		
 			</div>
