@@ -8,7 +8,7 @@ const ButtonModal = styled.div`
 	left:0;
 	right:0;
 	bottom:0;
-	background:rgba(0,0,0,0.4);
+	background:rgba(0,0,0,0.2);
 	display:flex;
 	align-items: center;
 	justify-content: center;
@@ -27,6 +27,7 @@ const ButtonModal = styled.div`
 		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 		border: var(--green-middle) 2px solid;
 		grid-gap: 1em;
+
 
 
 	}

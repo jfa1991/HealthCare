@@ -8,6 +8,8 @@ const Wrapper = styled.div`
 	position relative;
 	padding: 0;
 	padding: 5em 1em;
+	cursor: ${props => (props.selectedTime ? 'pointer' : 'default')};
+
 
 }
 
@@ -29,6 +31,9 @@ i:hover {
 	right: 1.5em;
 	cursor: pointer;
 	z-index: 10;
+	z-index: ${props => (props.selectedTime ? '100' : '10')};
+
+
 
 }
 

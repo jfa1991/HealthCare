@@ -42,8 +42,7 @@ const createAppointment =  async (req, res) => {
 
 
 
-	//res.status(StatusCodes.CREATED).json({ appointment })
-	res.status(StatusCodes.CREATED).json({ user })
+	res.status(StatusCodes.CREATED).json({ appointment })
 	
 };
 

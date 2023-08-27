@@ -229,6 +229,7 @@ if (action.type === CREATE_APPOINTMENT_SUCCESS) {
 	return {
 		...state,
 		isLoading: false,
+		selectedTime:false
 	}
 }
 

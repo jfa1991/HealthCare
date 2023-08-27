@@ -72,15 +72,16 @@ const TimeSlotAppointment = () => {
 	//console.log(result)
 
 	return(
-		<Wrapper>
+		<Wrapper selectedTime = {selectedTime}>
 
-			<div className = 'container-time-picker'>
-				<i className = 'close-time-slot' onClick = {closeTime}><FaRegTimesCircle size = {32} color = 'grey' /></i>
+			<div className = 'container-time-picker' onClick ={selectedTime ? closeTime : null } >
+				<i className = 'close-time-slot' onClick = {closeTime}><FaRegTimesCircle size = {32}  /></i>
 				<h4 className = 'title'>Available Slots </h4>
 
-				
 
-				{selectedTime ? <ButtonModal>
+
+
+				{selectedTime ? <ButtonModal selectedTime = {selectedTime}>
 									<div className = 'grid-modal'>
 										<span className ='slot-selected'>{dayOfWeekName} {dayOfMonth} {month} at {selectedTime}</span>
 										<button onClick={createAppointment}
@@ -91,6 +92,7 @@ const TimeSlotAppointment = () => {
 										</button>
 									</div>
 								</ButtonModal>: null}
+
 
 					<div className ='time-slot-container'>
 
