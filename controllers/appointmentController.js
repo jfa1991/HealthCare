@@ -1,5 +1,7 @@
 //import { StatusCodes } from  'http-status-codes'
 
+import User from '../models/UserHealthCare.js'
+
 import Appointment from '../models/AppointmentHealthCare.js'
 import { 
 	BadRequestError,
@@ -14,10 +16,15 @@ import checkPermissions from '../utils/checkPermission.js'
 
 import mongoose from 'mongoose'
 
+import sendEmail from '../middleware/send-email.js'
 
-const createAppointment =  async (req, res, next) => {
+
+const createAppointment =  async (req, res) => {
 
 	const { dateAppointment,timeAppointment } = req.body
+
+	const user = await User.findOne({ _id: req.user.userId })
+
 
 
 	if(!dateAppointment|| !timeAppointment) {
@@ -28,7 +35,15 @@ const createAppointment =  async (req, res, next) => {
 
 	const appointment = await Appointment.create(req.body)
 
-	res.status(StatusCodes.CREATED).json({ appointment })
+	// Destructure properties from the appointment object with different variable names
+    const { dateAppointment: appointmentDate, timeAppointment: appointmentTime } = appointment;
+
+     await sendEmail(user, appointmentDate, appointmentTime);
+
+
+
+	//res.status(StatusCodes.CREATED).json({ appointment })
+	res.status(StatusCodes.CREATED).json({ user })
 	
 };
 
